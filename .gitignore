@@ -1,0 +1,42 @@
+__pycache__# Ignorar a pasta do ambiente virtual
+venv/
+
+# Arquivos de ambiente e configurações sensíveis
+.env
+*.env
+
+# Compilados Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+
+# Configurações do editor/IDE
+.vscode/
+.idea/
+
+# Logs e arquivos temporários
+*.log 
+*.tmp
+*.pid
+
+# Arquivos gerados por testes
+htmlcov/
+.tox/
+.cache/
+.coverage
+pytest_cache/
+
+# Arquivos de build
+build/
+dist/
+*.egg
+*.wheel
+
+# Arquivos estáticos e uploads (se aplicável)
+static/
+media/
+
+# Ignorar outras configurações ou arquivos temporários
+.DS_Store
+Thumbs.db
