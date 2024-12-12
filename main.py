@@ -4,8 +4,8 @@ from fastapi import FastAPI, Form, HTTPException, Query
 
 app = FastAPI()
 
-# In-memory storage for contacts
-contacts: List[dict] = []
+# Armazenamento em memória para contatos
+contatos = []
 
 @app.get("/contatos")
 async def listar_contatos():
@@ -13,93 +13,93 @@ async def listar_contatos():
   Recupera a lista de todos os contatos.
   """
   return {
-      "status": "success",
-      "message": "Contatos recuperados com sucesso.",
-      "data": contacts
+      "status": "successo",
+      "mensagem": "Contatos recuperados com sucesso.",
+      "dados": contatos
   }
 
-@app.get("/contacts/{contact_id}")
-async def obter_contato_por_id(contact_id: int):
+@app.get("/contatos/{contato_id}")
+async def obter_contato_por_id(contato_id: int):
   """
   Recupera um contato específico pelo seu ID.
   """
-  for contact in contacts:
-      if contact["id"] == contact_id:
-          return {
-              "status": "success",
-              "message": "Contato recuperado com sucesso.",
-              "data": contact
-          }
+  for contato in contatos:
+    if contato["id"] == contato_id:
+      return {
+          "status": "successo",
+          "mensagem": "Contato recuperado com sucesso.",
+          "dados": contato
+      }
   raise HTTPException(status_code=404, detail="Contato não encontrado.")
 
-@app.get("/contacts_search")
-async def buscar_contatos_por_nome(name: str = Query(...)):
+@app.get("/contatos_pesquisa")
+async def buscar_contatos_por_nome(nome: str = Query(...)):
   """
   Busca contatos por nome (pesquisa por substring).
   """
-  matching_contacts = [contact for contact in contacts if name.lower() in contact["name"].lower()]
-  if matching_contacts:
-      return {
-          "status": "success",
-          "message": "Contatos recuperados com sucesso.",
-          "data": matching_contacts
-      }
+  contatos_encontrados = [contato for contato in contatos if nome.lower() in contato["nome"].lower()]
+  if contatos_encontrados:
+    return {
+        "status": "successo",
+        "mensagem": "Contatos recuperados com sucesso.",
+        "dados": contatos_encontrados
+    }
   raise HTTPException(status_code=404, detail="Nenhum contato encontrado com o nome fornecido.")
 
 @app.post("/contatos")
 async def criar_contato(
-  name: str = Form(...),
-  phone: str = Form(...),
+  nome: str = Form(...),
+  telefone: str = Form(...),
   email: str = Form(...)
 ):
   """
   Adiciona um novo contato à agenda.
   """
-  new_id = len(contacts) + 1  # Gera um ID simples
-  contact = {
-      "id": new_id,
-      "name": name,
-      "phone": phone,
+  novo_id = len(contatos) + 1  # Gera um ID simples
+  contato = {
+      "id": novo_id,
+      "nome": nome,
+      "telefone": telefone,
       "email": email
   }
-  contacts.append(contact)
+  contatos.append(contato)
   return {
-      "status": "success",
-      "message": "Contato adicionado com sucesso.",
-      "data": contact
+      "status": "successo",
+      "mensagem": "Contato adicionado com sucesso.",
+      "dados": contato
   }
 
-@app.put("/contacts/{contact_id}")
+@app.put("/contatos/{contato_id}")
 async def atualizar_contato(
-  contact_id: int,
-  name: str = Form(...),
-  phone: str = Form(...),
+  contato_id: int,
+  nome: str = Form(...),
+  telefone: str = Form(...),
   email: str = Form(...)
 ):
   """
   Atualiza os detalhes de um contato existente.
   """
-  for contact in contacts:
-      if contact["id"] == contact_id:
-          contact.update({"name": name, "email": email, "phone": phone})
-          return {
-              "status": "success",
-              "message": "Contato atualizado com sucesso.",
-              "data": contact
-          }
+  for contato in contatos:
+    if contato["id"] == contato_id:
+      contato.update({"nome": nome, "email": email, "telefone": telefone})
+      return {
+          "status": "successo",
+          "mensagem": "Contato atualizado com sucesso.",
+          "dados": contato
+      }
   raise HTTPException(status_code=404, detail="Contato não encontrado.")
 
-@app.delete("/contacts/{contact_id}")
-async def deletar_contato(contact_id: int):
-    """
-    Remove um contato da agenda.
-    """
-    for index, contact in enumerate(contacts):
-        if contact["id"] == contact_id:
-            deleted_contact = contacts.pop(index)
-            return {
-                "status": "success",
-                "message": "Contato deletado com sucesso.",
-                "data": deleted_contact
-            }
-    raise HTTPException(status_code=404, detail="Contato não encontrado.")
+@app.delete("/contatos/{contato_id}")
+async def deletar_contato(contato_id: int):
+  """
+  Remove um contato da agenda.
+  """
+  for indice, contato in enumerate(contatos):
+    if contato["id"] == contato_id:
+      contato_deletado = contatos.pop(indice)
+      return {
+          "status": "successo",
+          "mensagem": "Contato deletado com sucesso.",
+          "dados": contato_deletado
+      }
+  raise HTTPException(status_code=404, detail="Contato não encontrado.")
